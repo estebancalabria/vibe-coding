@@ -12,40 +12,53 @@
 
 ## Paso 1: Crear el proyecto vacío
 
-1. [WINDOWS] Abrí **PowerShell** y ejecutá:
+1. [WINDOWS] Abrí **CMD** o **PowerShell** y ejecutá:
 
-```powershell
-mkdir generative-art-demo
-cd generative-art-demo
-git init
+```bat
+mkdir C:\Temp\generative-art-demo
+cd C:\Temp\generative-art-demo
 mkdir .github\skills
 ```
 
 2. Abrí la carpeta en VS Code:
 
-```powershell
+```bat
 code .
 ```
 
-## Paso 2: Descargar la Skill
+## Paso 2: Clonar el repositorio de Skills
 
-1. En la terminal, cloná el repositorio de ejemplos de Anthropic a una carpeta temporal:
+1. En la terminal, cloná el repositorio de ejemplos de Anthropic en una carpeta conocida, fuera del proyecto:
 
-```powershell
-git clone https://github.com/anthropics/skills.git $env:TEMP\anthropic-skills
+```bat
+git clone https://github.com/anthropics/skills.git C:\Temp\anthropic-skills
 ```
 
-2. Copiá **la carpeta completa** de la Skill a tu proyecto:
+2. Verificá que la Skill esté en el repositorio clonado:
 
-```powershell
-Copy-Item -Recurse $env:TEMP\anthropic-skills\skills\algorithmic-art .\.github\skills\algorithmic-art
+```bat
+dir C:\Temp\anthropic-skills\skills\algorithmic-art
+```
+
+## Paso 3: Copiar la Skill al proyecto
+
+1. Asegurate de estar parado en la carpeta del proyecto (`C:\Temp\generative-art-demo`) y copiá **la carpeta completa** de la Skill:
+
+```bat
+xcopy /E /I "C:\Temp\anthropic-skills\skills\algorithmic-art" ".github\skills\algorithmic-art"
 ```
 
 > Hay que copiar la carpeta entera y no solo `SKILL.md`. La Skill le indica al agente que lea `templates/viewer.html` antes de generar el HTML, y sin esa plantilla el resultado se degrada.
 
-## Paso 3: Verificar la estructura
+## Paso 4: Verificar la estructura
 
-1. [TAB] En el **Explorer** de VS Code, confirmá que tengas esta estructura:
+1. En la terminal, listá el contenido copiado:
+
+```bat
+tree /F .github\skills
+```
+
+2. [TAB] En el **Explorer** de VS Code, confirmá que tengas esta estructura:
 
 ```text
 generative-art-demo/
@@ -59,26 +72,26 @@ generative-art-demo/
                 └── (archivo JS de plantilla)
 ```
 
-2. Abrí `SKILL.md` y revisá el encabezado YAML. Tiene que mostrar `name: algorithmic-art` y un campo `description`. Copilot usa esa descripción para decidir cuándo cargar la Skill.
+3. Abrí `SKILL.md` y revisá el encabezado YAML. Tiene que mostrar `name: algorithmic-art` y un campo `description`. Copilot usa esa descripción para decidir cuándo cargar la Skill.
 
-## Paso 4: Recargar VS Code
+## Paso 5: Recargar VS Code
 
 1. [MENU] Presioná **Ctrl+Shift+P** y ejecutá **Developer: Reload Window**.
-2. Si en el Paso 6 Copilot no detecta la Skill, [MENU] abrí **File > Preferences > Settings**, buscá `skills` y verificá que el soporte de Agent Skills esté habilitado. Esta opción puede variar según tu versión de VS Code.
+2. Si en el Paso 7 Copilot no detecta la Skill, [MENU] abrí **File > Preferences > Settings**, buscá `skills` y verificá que el soporte de Agent Skills esté habilitado. Esta opción puede variar según tu versión de VS Code.
 
-## Paso 5: Abrir Copilot Chat en modo Agent
+## Paso 6: Abrir Copilot Chat en modo Agent
 
 1. [TAB] Abrí el panel de **Copilot Chat** (Ctrl+Alt+I).
 2. En el selector de modo, elegí **Agent**. Este modo es necesario para que Copilot pueda crear archivos en el proyecto.
 
-## Paso 6: Ejecutar la Skill
+## Paso 7: Ejecutar la Skill
 
 1. Escribí el siguiente prompt en el chat:
 
 ```text
-Using the algorithmic-art skill, create generative art based on flow fields
-and thousands of particles. Theme: ocean currents at dusk. Save the files
-inside an "art" folder in the project.
+Usando la skill algorithmic-art, creá arte generativo basado en campos de flujo
+y miles de partículas. Temática: corrientes oceánicas al atardecer. Guardá los
+archivos dentro de una carpeta "art" en el proyecto.
 ```
 
 2. Copilot debería trabajar en dos fases:
@@ -88,7 +101,7 @@ inside an "art" folder in the project.
 
 > Si Copilot no usó la Skill por su cuenta, probá invocarla de forma explícita escribiendo `/algorithmic-art` al inicio del prompt.
 
-## Paso 7: Ver el resultado
+## Paso 8: Ver el resultado
 
 1. [TAB] En el Explorer, abrí la carpeta `art` y hacé clic derecho sobre el archivo `.html`.
 2. [MENU] Elegí **Reveal in File Explorer**.
@@ -97,29 +110,22 @@ inside an "art" folder in the project.
    - Partículas animadas siguiendo un campo de flujo.
    - Una barra lateral con **Seed**, **Parameters** y **Actions**.
 
-## Paso 8: Explorar la parte interactiva
+## Paso 9: Explorar la parte interactiva
 
 1. Cambiá la **Seed** y observá cómo la misma lógica produce una composición distinta.
 2. Mové los sliders de parámetros (cantidad de partículas, escala del ruido, etc.) y mirá el efecto en tiempo real.
 3. Probá las opciones de **Actions** (por ejemplo, regenerar o guardar la imagen).
 
-## Paso 9: Iterar con Copilot
+## Paso 10: Iterar con Copilot
 
 1. Volvé al chat y pedí un cambio concreto:
 
 ```text
-Change the color palette to warm sunset tones and add a slider to control
-particle trail length.
+Cambiá la paleta de colores a tonos cálidos de atardecer y agregá un slider
+para controlar el largo de la estela de las partículas.
 ```
 
 2. [BROWSER] Recargá el `.html` en el navegador (F5) y comprobá que el nuevo control aparece.
-
-## Paso 10: Registrar el trabajo en Git
-
-```powershell
-git add .
-git commit -m "Add algorithmic-art skill and generated flow field artwork"
-```
 
 ## Validación del laboratorio
 
@@ -129,14 +135,15 @@ git commit -m "Add algorithmic-art skill and generated flow field artwork"
 | Copilot generó un `.md` con la filosofía | Sí |
 | El `.html` abre en el navegador y anima partículas | Sí |
 | Cambiar la Seed produce una composición distinta | Sí |
-| El slider agregado en el Paso 9 funciona | Sí |
+| El slider agregado en el Paso 10 funciona | Sí |
 
 ## Problemas frecuentes
 
+- **`git clone` dice que la carpeta ya existe:** borrá `C:\Temp\anthropic-skills` o ejecutá `git pull` dentro de esa carpeta para actualizarla.
 - **Copilot no menciona ni usa la Skill:** verificá que la ruta sea exactamente `.github/skills/algorithmic-art/SKILL.md`, recargá la ventana y probá con `/algorithmic-art`.
 - **El HTML abre en blanco:** abrí las herramientas de desarrollador del navegador (F12). Si falla la carga de p5.js, revisá tu conexión, porque se descarga desde un CDN.
 - **El visor no tiene la barra lateral esperada:** es probable que Copilot haya generado el HTML desde cero en lugar de usar la plantilla. Pedile:
 
 ```text
-Rebuild the viewer starting from templates/viewer.html
+Reconstruí el visor partiendo de templates/viewer.html
 ```
